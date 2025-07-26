@@ -1,0 +1,8 @@
+{
+  "tileCount": 8,
+  "pieceCount": 6,
+  "blackTilesColor": "#AF9164",
+  "whiteTilesColor": "#F7F3E3",
+  "blackTilesMoveIndicationColor": "blue",
+  "whiteTilesMoveIndicationColor": "green"
+}
