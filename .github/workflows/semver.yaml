@@ -1,0 +1,26 @@
+on:
+  push:
+    branches: [ develop ]
+
+permissions:
+  contents: write
+  pull-requests: write
+
+name: release-please
+
+jobs:
+  release-please:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Bump version
+        uses: googleapis/release-please-action@v4
+        with:
+          token: '${{ github.token }}'
+          release-type: 'node'
+          target-branch: 'main'
+
+
+
