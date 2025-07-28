@@ -1,14 +1,28 @@
 {
-  "name": "naho-chess",
+  "name": "chess",
   "private": true,
   "version": "1.0.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "preview": "vite preview"
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint --fix",
+    "format": "prettier --write ."
   },
   "devDependencies": {
+    "@eslint/css": "^0.10.0",
+    "@eslint/js": "^9.32.0",
+    "@eslint/json": "^0.13.1",
+    "eslint": "^9.32.0",
+    "globals": "^16.3.0",
+    "jiti": "^2.5.1",
+    "prettier": "3.6.2",
+    "typescript-eslint": "^8.38.0",
     "vite": "^6.3.5"
+  },
+  "dependencies": {
+    "typescript": "^5.8.3",
+    "vitest": "^3.2.4"
   }
 }

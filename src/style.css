@@ -1,5 +1,5 @@
 :root {
-  --dark: #4E3C2D
+  --dark: #4e3c2d;
 }
 
 body {
@@ -52,7 +52,8 @@ aside {
   text-align: center;
 }
 
-#next, #previous {
+#next,
+#previous {
   display: block;
   background: transparent;
   cursor: pointer;
@@ -60,7 +61,8 @@ aside {
   padding: 0;
 }
 
-body,html {
+body,
+html {
   margin: 0;
   padding: 0;
 }
@@ -94,7 +96,6 @@ dialog {
     color: lightgray;
   }
 
-
   & > button {
     display: block;
     margin-top: 16px;
@@ -103,9 +104,7 @@ dialog {
     border: none;
     outline: none;
     cursor: pointer;
-    font-size: 1.10rem;
-    background-color: #F7F3E3;
-
+    font-size: 1.1rem;
+    background-color: #f7f3e3;
   }
-
 }
