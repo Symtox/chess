@@ -1,9 +1,22 @@
 import js from "@eslint/js";
 import globals from "globals";
-import tseslint from "typescript-eslint";
+import tsEslint from "typescript-eslint";
 import json from "@eslint/json";
-import css from "@eslint/css";
 import { defineConfig } from "eslint/config";
+
+const tsLintConfig = tsEslint.config(
+  tsEslint.configs.recommended,
+  {
+    rules: {
+      '@typescript-eslint/array-type': [
+        'error',
+        {
+          'default': 'array-simple'
+        }
+      ]
+    }
+  }
+)
 
 export default defineConfig([
   {
@@ -12,17 +25,19 @@ export default defineConfig([
     extends: ["js/recommended"],
     languageOptions: { globals: globals.browser },
   },
-  tseslint.configs.recommended,
+  tsLintConfig,
   {
     files: ["**/*.json"],
     plugins: { json },
     language: "json/json",
     extends: ["json/recommended"],
+    ignores: ['package*']
   },
-  {
-    files: ["**/*.css"],
-    plugins: { css },
-    language: "css/css",
-    extends: ["css/recommended"],
-  },
+  //TODO needs update for baseline
+  // {
+  //   files: ["**/*.css"],
+  //   plugins: { css },
+  //   language: "css/css",
+  //   extends: ["css/recommended"],
+  // },
 ]);
