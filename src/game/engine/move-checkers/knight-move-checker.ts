@@ -9,7 +9,7 @@ export class KnightMoveChecker extends MoveChecker implements MoveValidator {
   }
 
   getAllKnightMovesFromPosition(piece: Piece, pos: Coordinate, grid: Grid) {
-    const moves: (Move | undefined)[] = [];
+    const moves: Array<Move | undefined> = [];
     const moveLength = 2,
       moveWidth = 1;
 

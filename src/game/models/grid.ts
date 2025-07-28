@@ -4,9 +4,9 @@ import { Coordinate } from "@/types";
 import { Castle, Color, isCastle, Move, Piece, PieceType } from "@/types";
 
 export class Grid {
-  public grid: (Piece | undefined)[][];
+  public grid: Array<Array<Piece | undefined>>;
 
-  constructor(grid?: (Piece | undefined)[][]) {
+  constructor(grid?: Array<Array<Piece | undefined>>) {
     if (!grid) {
       this.grid = this.getInitialGrid();
     } else {

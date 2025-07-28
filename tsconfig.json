@@ -17,18 +17,10 @@
       "@/*": ["src/*"]
     },
     "module": "ESNext",
-//    "jsx": "preserve",
-//    "strict": true,
-//    "verbatimModuleSyntax": true,
     "useDefineForClassFields": true,
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
     "skipLibCheck": true
   },
-
-
-
-  "include": [
-      "src/**/*"
-  ]
+  "include": ["src/**/*"]
 }
