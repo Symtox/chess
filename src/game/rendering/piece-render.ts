@@ -1,25 +1,24 @@
-import {spriteHandler} from "./sprites/sprite-handler";
-import {Piece} from "@/types";
+import { spriteHandler } from "./sprites/sprite-handler";
+import { Piece } from "@/types";
 
 export class PieceRender {
-
-  pieceTileScaleFactor = .75
-  private readonly tileSize: number
-  private readonly canvas: HTMLCanvasElement
-
+  pieceTileScaleFactor = 0.75;
+  private readonly tileSize: number;
+  private readonly canvas: HTMLCanvasElement;
 
   constructor(canvas: HTMLCanvasElement, tileSize: number) {
-    this.canvas = canvas
-    this.tileSize = tileSize
+    this.canvas = canvas;
+    this.tileSize = tileSize;
   }
 
-
-
   renderPieceByCanvasLocation(piece: Piece, x: number, y: number) {
-    const positionInSprite = spriteHandler.getPieceCoordinate(piece.type, piece.color);
-    const ctx = this.canvas.getContext("2d")
+    const positionInSprite = spriteHandler.getPieceCoordinate(
+      piece.type,
+      piece.color,
+    );
+    const ctx = this.canvas.getContext("2d");
 
-    if(!ctx) return;
+    if (!ctx) return;
 
     ctx.drawImage(
       spriteHandler.getSprite(),
@@ -30,8 +29,8 @@ export class PieceRender {
       x,
       y,
       this.tileSize * this.pieceTileScaleFactor,
-      this.tileSize * this.pieceTileScaleFactor
-    )
+      this.tileSize * this.pieceTileScaleFactor,
+    );
   }
 
   renderPieceByGridPosition(piece: Piece, x: number, y: number) {
@@ -39,14 +38,14 @@ export class PieceRender {
       piece,
       x * this.tileSize + (this.tileSize * (1 - this.pieceTileScaleFactor)) / 2,
       y * this.tileSize + (this.tileSize * (1 - this.pieceTileScaleFactor)) / 2,
-    )
+    );
   }
 
   renderPieceByCenterCanvasLocation(piece: Piece, x: number, y: number) {
     this.renderPieceByCanvasLocation(
       piece,
-      x - .5 * this.tileSize * this.pieceTileScaleFactor,
-      y - .5 * this.tileSize * this.pieceTileScaleFactor,
-    )
+      x - 0.5 * this.tileSize * this.pieceTileScaleFactor,
+      y - 0.5 * this.tileSize * this.pieceTileScaleFactor,
+    );
   }
 }

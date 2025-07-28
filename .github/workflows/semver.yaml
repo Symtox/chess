@@ -1,6 +1,6 @@
 on:
   push:
-    branches: [ develop ]
+    branches: [develop]
 
 permissions:
   contents: write
@@ -19,9 +19,6 @@ jobs:
       - name: Bump version
         uses: googleapis/release-please-action@v4
         with:
-          token: '${{ github.token }}'
-          release-type: 'node'
-          target-branch: 'main'
-
-
-
+          token: "${{ github.token }}"
+          release-type: "node"
+          target-branch: "main"

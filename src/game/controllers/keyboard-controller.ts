@@ -1,30 +1,30 @@
-import {GameEngine} from "@/game/engine/game-engine";
+import { GameEngine } from "@/game/engine/game-engine";
 
 export class KeyboardController {
-  private el: Element | null = null
-  private gameEngine: GameEngine
+  private el: Element | null = null;
+  private gameEngine: GameEngine;
 
   constructor(gameEngine: GameEngine) {
-    this.gameEngine = gameEngine
+    this.gameEngine = gameEngine;
   }
 
-  listen(el: any) {
-    this.el = el
-    el.addEventListener('keydown', this.onKeyDown.bind(this))
+  listen(el: Element) {
+    this.el = el;
+    el.addEventListener("keydown", this.onKeyDown.bind(this));
   }
 
   onKeyDown(e: KeyboardEvent) {
-    if(e.key === "ArrowLeft") {
-      this.gameEngine.undoMove()
+    if (e.key === "ArrowLeft") {
+      this.gameEngine.undoMove();
     }
-    if(e.key === "ArrowRight") {
-      this.gameEngine.nextMove()
+    if (e.key === "ArrowRight") {
+      this.gameEngine.nextMove();
     }
   }
 
   destroy() {
-    if(this.el) {
-      this.el?.removeEventListener('keydown', this.onKeyDown.bind(this))
+    if (this.el) {
+      this.el?.removeEventListener("keydown", this.onKeyDown.bind(this));
     }
   }
 }
