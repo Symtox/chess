@@ -63,7 +63,7 @@ export class ChessGame {
     this.mouseController.listen(canvas);
 
     this.keyBoardController = new KeyboardController(this.gameEngine);
-    this.keyBoardController.listen(document);
+    this.keyBoardController.listen(document as any);
 
     this.sidebarController = new SidebarController(this.gameEngine);
     this.sidebarController.listen(

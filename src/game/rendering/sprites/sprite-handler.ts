@@ -1,5 +1,5 @@
 import config from "../../models/config.json";
-import { Color, PieceType } from "@/types";
+import { Color, PieceType } from "@/types/types";
 
 class SpriteHandler {
   spritePieceOrder = ["king", "queen", "bishop", "knight", "rook", "pawn"];

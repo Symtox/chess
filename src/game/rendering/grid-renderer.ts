@@ -1,5 +1,5 @@
 import config from "@/game/models/config.json";
-import { Coordinate } from "@/types";
+import { Coordinate } from "@/types/types";
 
 export class GridRenderer {
   private readonly canvas: HTMLCanvasElement;

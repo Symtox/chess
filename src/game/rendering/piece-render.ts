@@ -1,5 +1,5 @@
 import { spriteHandler } from "./sprites/sprite-handler";
-import { Piece } from "@/types";
+import { Piece } from "@/types/types";
 
 export class PieceRender {
   pieceTileScaleFactor = 0.75;

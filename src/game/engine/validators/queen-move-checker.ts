@@ -1,18 +1,18 @@
 import { MoveChecker, MoveValidator } from "./move-checker";
 import { bishopMoveChecker } from "./bishop-move-checker";
 import { rookMoveChecker } from "./rook-move-checker";
-import { Coordinate, Piece } from "@/types";
-import { Grid } from "@/game/models/grid";
+import { Coordinate, Piece } from "@/types/types";
+import {Game} from "@/types/game";
 
 export class QueenMoveChecker extends MoveChecker implements MoveValidator {
   constructor() {
     super();
   }
 
-  getPossibleMoves(piece: Piece, pos: Coordinate, grid: Grid) {
+  getPossibleMoves(piece: Piece, pos: Coordinate, game: Game) {
     return [
-      ...bishopMoveChecker.getPossibleMoves(piece, pos, grid),
-      ...rookMoveChecker.getPossibleMoves(piece, pos, grid),
+      ...bishopMoveChecker.getPossibleMoves(piece, pos, game),
+      ...rookMoveChecker.getPossibleMoves(piece, pos, game),
     ];
   }
 }
