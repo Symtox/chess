@@ -15,11 +15,11 @@ import { Clock } from "@/components/clock/clock";
 
 export class ChessGame {
   private renderer: Renderer;
-  private gameState: GameState;
+  private readonly gameState: GameState;
   private mouseController: MouseController;
   private keyBoardController: KeyboardController;
   private sidebarController: SidebarController;
-  private gameEngine: GameEngine;
+  private readonly gameEngine: GameEngine;
 
   constructor(canvas: HTMLCanvasElement) {
     this.renderer = new Renderer(canvas);
@@ -63,7 +63,7 @@ export class ChessGame {
     this.mouseController.listen(canvas);
 
     this.keyBoardController = new KeyboardController(this.gameEngine);
-    this.keyBoardController.listen(document);
+    this.keyBoardController.listen(document as any);
 
     this.sidebarController = new SidebarController(this.gameEngine);
     this.sidebarController.listen(

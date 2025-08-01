@@ -3,7 +3,7 @@ import { PieceRender } from "./piece-render";
 import config from "@/game/models/config.json";
 import { PromotionTooltipRenderer } from "./promotion-tooltip-renderer";
 import { GameState } from "@/game/models/game-state";
-import { getMoveIndicationCoordinates } from "@/types";
+import { getMoveIndicationCoordinates, isCastle } from "@/types/types";
 
 export class Renderer {
   private gridRenderer: GridRenderer;
@@ -30,7 +30,7 @@ export class Renderer {
   }
 
   renderPieces(gameState: GameState) {
-    gameState.grid.grid.forEach((col, x) => {
+    gameState.game.board.forEach((col, x) => {
       col.forEach((cell, y) => {
         if (!cell) return;
 
@@ -46,12 +46,12 @@ export class Renderer {
 
   renderMoves(gameState: GameState) {
     gameState.allowedMoves.forEach((move) => {
-      if (move.capture) {
-        this.gridRenderer.renderPossibleCapture(
+      if (isCastle(move) || !move.capture) {
+        this.gridRenderer.renderPossibleMove(
           getMoveIndicationCoordinates(move),
         );
-      } else {
-        this.gridRenderer.renderPossibleMove(
+      } else if (move.capture) {
+        this.gridRenderer.renderPossibleCapture(
           getMoveIndicationCoordinates(move),
         );
       }

@@ -1,5 +1,6 @@
-import { moveCheckFactory } from "./move-checkers/move-checker-factory";
+import {MoveCheckerFactory} from "@/game/engine/validators/move-checker-factory";
 import {
+  clonePojo,
   Color,
   Coordinate,
   getOpponentColor,
@@ -7,39 +8,36 @@ import {
   isNormalMove,
   Move,
   Piece,
-} from "@/types";
-import { Grid } from "@/game/models/grid";
+} from "@/types/types";
+import { applyMove, findCoordsForPiece, Game } from "@/types/game";
+import {bishopMoveChecker} from "@/game/engine/validators/bishop-move-checker";
+import {pawnMoveChecker} from "@/game/engine/validators/pawn-move-checker";
+import {rookMoveChecker} from "@/game/engine/validators/rook-move-checker";
+import {knightMoveChecker} from "@/game/engine/validators/knight-move-checker";
+import {kingMoveChecker} from "@/game/engine/validators/king-move-checker";
+import {queenMoveChecker} from "@/game/engine/validators/queen-move-checker";
 
 export class ChessEngine {
+  private moveCheckFactory = new MoveCheckerFactory({
+    bishop: bishopMoveChecker,
+    pawn: pawnMoveChecker,
+    rook: rookMoveChecker,
+    knight: knightMoveChecker,
+    king: kingMoveChecker,
+    queen: queenMoveChecker,
+  })
+
   constructor() {}
 
-  computeAllowedMoves(
-    piece: Piece,
-    grid: Grid,
-    pos: Coordinate,
-    lastMove?: Move,
-  ) {
-    const moves = moveCheckFactory
-      .getInstance(piece.type)
-      .getPossibleMoves(piece, pos, grid, lastMove);
-
-    const [legal] = this.separateCheckedMovesFromLegal(
-      moves,
-      grid,
-      piece.color,
-    );
-    return legal;
-  }
-
-  getControlledSquareForColor(grid: Grid, color: Color) {
-    return grid.grid.reduce((gAcc, col, x) => {
+  getControlledSquareForColor(game: Game, color: Color) {
+    return game.board.reduce((gAcc, col, x) => {
       const cSquares = col.reduce((cAcc, square, y) => {
         if (!square || square.color !== color) return cAcc;
 
         const pos = { x: x, y: y };
-        const squares = moveCheckFactory
+        const squares = this.moveCheckFactory
           .getInstance(square.type)
-          .getPossibleMoves(square, pos, grid)
+          .getPossibleMoves(square, pos, game)
           .filter((move) => isNormalMove(move))
           .map((move) => move.to);
 
@@ -49,20 +47,21 @@ export class ChessEngine {
     }, [] as Coordinate[]);
   }
 
-  separateCheckedMovesFromLegal(moves: Move[], grid: Grid, color: Color) {
+  separateCheckedMovesFromLegal(moves: Move[], game: Game, color: Color) {
     const legals: Move[] = [];
     const checked: Move[] = [];
 
     moves.forEach((move) => {
-      const tempGrid = grid.clone();
+      const tempGame = clonePojo(game);
 
-      if (isCastle(move) && this.isCheckForColor(tempGrid, color)) {
+      if (isCastle(move) && this.isCheckForColor(tempGame, color)) {
+        //todo
         checked.push(move);
         return;
       }
 
-      tempGrid.applyMove(move);
-      if (this.isCheckForColor(tempGrid, color)) {
+      applyMove(tempGame, move);
+      if (this.isCheckForColor(tempGame, color)) {
         checked.push(move);
       } else {
         legals.push(move);
@@ -72,11 +71,11 @@ export class ChessEngine {
     return [legals, checked];
   }
 
-  isCheckForColor(grid: Grid, color: Color) {
-    const kingCoords = grid.findCoordsForPiece("king", color);
-    if (!kingCoords) throw new Error("king not found ??");
+  isCheckForColor(game: Game, color: Color) {
+    const kingCoords = findCoordsForPiece(game.board, "king", color);
+    if (!kingCoords) throw new Error("king not found ??"); //TODO
     const opponentControlledSquare = this.getControlledSquareForColor(
-      grid,
+      game,
       getOpponentColor(color),
     );
 
@@ -85,30 +84,45 @@ export class ChessEngine {
     );
   }
 
-  isCheckMate(grid: Grid, color: Color, lastMove?: Move) {
-    const moves = this.computeAllAllowedMoves(grid, color, lastMove);
+  isCheckMate(game: Game, color: Color) {
+    const moves = this.computeAllAllowedMoves(game, color);
 
-    return moves.length === 0 && this.isCheckForColor(grid, color);
+    return moves.length === 0 && this.isCheckForColor(game, color);
   }
 
-  isStaleMate(grid: Grid, color: Color, lastMove?: Move) {
-    const moves = this.computeAllAllowedMoves(grid, color, lastMove);
+  isStaleMate(game: Game, color: Color) {
+    const moves = this.computeAllAllowedMoves(game, color);
 
-    return moves.length === 0 && !this.isCheckForColor(grid, color);
+    return moves.length === 0 && !this.isCheckForColor(game, color);
   }
 
-  computeAllAllowedMoves(grid: Grid, color: Color, lastMove?: Move) {
+  computeAllAllowedMoves(game: Game, color: Color) {
     const moves = [];
-    for (let x = 0; x < grid.grid.length; x++) {
-      for (let y = 0; y < grid.grid[x].length; y++) {
-        const pos = { x: x, y: y };
-        const piece = grid.getPiece(pos);
+    for (let x = 0; x < game.board.length; x++) {
+      for (let y = 0; y < game.board[x].length; y++) {
+        const piece = game.board[x][y];
         if (piece && piece.color === color) {
-          moves.push(...this.computeAllowedMoves(piece, grid, pos, lastMove));
+          moves.push(...this.computeAllowedMoves(piece, { x: x, y: y }, game));
         }
       }
     }
 
     return moves;
+  }
+
+  computeAllowedMoves(piece: Piece, pos: Coordinate, game: Game) {
+    const moves = this.moveCheckFactory
+      .getInstance(piece.type)
+      .getPossibleMoves(piece, pos, game);
+
+    this.moveCheckFactory.getInstance("pawn")
+
+    const [legal] = this.separateCheckedMovesFromLegal(
+      moves,
+      game,
+      piece.color,
+    );
+
+    return legal;
   }
 }

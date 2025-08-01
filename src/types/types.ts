@@ -72,3 +72,7 @@ export const getMoveIndicationCoordinates = (move: Move) => {
   }
   return move.to;
 };
+
+export const clonePojo = <T>(obj: T) => {
+  return JSON.parse(JSON.stringify(obj)) as T;
+};

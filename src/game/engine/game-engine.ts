@@ -12,7 +12,8 @@ import {
   getOpponentColor,
   isCastle,
   Move,
-} from "@/types";
+} from "@/types/types";
+import { applyMove, getTrait, goToPreviousMove } from "@/types/game";
 
 export class GameEngine {
   private gameState: GameState;
@@ -47,25 +48,19 @@ export class GameEngine {
 
   grab(dx: number, dy: number) {
     const canvasPos = coordinateAdapter.fromDomToCanvas({ x: dx, y: dy });
-    const { x, y } = coordinateAdapter.fromCanvasToGrid(canvasPos);
-    const pos = { x: x, y: y };
-    const piece = this.gameState.grid.getPiece(pos);
-    if (piece && piece.color === this.gameState.getTrait()) {
+    const pos = coordinateAdapter.fromCanvasToGrid(canvasPos);
+    const piece = this.gameState.game.board[pos.x][pos.y];
+    if (piece && piece.color === getTrait(this.gameState.game)) {
       this.cssAdapter.changeCursor("grabbing");
       this.gameState.setSelection(
         {
           x: canvasPos.x,
           y: canvasPos.y,
-          initialPosX: x,
-          initialPosY: y,
+          initialPosX: pos.x,
+          initialPosY: pos.y,
           piece: piece,
         },
-        this.chessEngine.computeAllowedMoves(
-          piece,
-          this.gameState.grid,
-          pos,
-          this.gameState.getLastMove(),
-        ),
+        this.chessEngine.computeAllowedMoves(piece, pos, this.gameState.game),
       );
     }
   }
@@ -108,10 +103,8 @@ export class GameEngine {
   }
 
   isHoveringPiecePlayablePiece(pos: Coordinate) {
-    return (
-      !!this.gameState.grid.getPiece(pos) &&
-      this.gameState.grid.getPiece(pos)?.color === this.gameState.getTrait()
-    );
+    const piece = this.gameState.game.board[pos.x][pos.y];
+    return piece && piece.color === getTrait(this.gameState.game);
   }
 
   hover(domX: number, domY: number) {
@@ -124,8 +117,8 @@ export class GameEngine {
   }
 
   playMove(move: Move) {
-    this.gameState.applyMove(move);
-    this.getTimerByColor(this.gameState.getTrait()).stop();
+    applyMove(this.gameState.game, move);
+    this.getTimerByColor(getTrait(this.gameState.game)).stop();
 
     if (!isCastle(move)) {
       move.piece.hasMoved = true;
@@ -135,27 +128,27 @@ export class GameEngine {
 
     if (
       this.chessEngine.isCheckMate(
-        this.gameState.grid,
-        getOpponentColor(this.gameState.getTrait()),
-        this.gameState.getLastMove(),
+        this.gameState.game,
+        getOpponentColor(getTrait(this.gameState.game)),
       )
     ) {
       this.dialogAdapter.show(
-        `${this.gameState.getTrait()} won`,
+        `${getTrait(this.gameState.game)} won`,
         "by checkmate",
       );
       this.audioAdapter.play("end");
     } else if (
       this.chessEngine.isStaleMate(
-        this.gameState.grid,
-        getOpponentColor(this.gameState.getTrait()),
-        this.gameState.getLastMove(),
+        this.gameState.game,
+        getOpponentColor(getTrait(this.gameState.game)),
       )
     ) {
       this.dialogAdapter.show(`Draw`, "by stalemate");
       this.audioAdapter.play("end");
     } else {
-      this.getTimerByColor(getOpponentColor(this.gameState.getTrait())).start();
+      this.getTimerByColor(
+        getOpponentColor(getTrait(this.gameState.game)),
+      ).start();
     }
   }
 
@@ -170,10 +163,10 @@ export class GameEngine {
   }
 
   undoMove() {
-    if (this.gameState.getMoveCount() < 1) {
+    if (this.gameState.game.moves.length < 1) {
       return;
     }
-    const move = this.gameState.goToPreviousMove();
+    const move = goToPreviousMove(this.gameState.game);
     if (!move) {
       return;
     }

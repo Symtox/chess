@@ -1,6 +1,6 @@
 import config from "@/game/models/config.json";
 import { spriteHandler } from "./sprites/sprite-handler";
-import { PieceType } from "@/types";
+import { PieceType } from "@/types/types";
 
 export class PromotionTooltipRenderer {
   private canvas: HTMLCanvasElement;
