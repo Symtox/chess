@@ -15,11 +15,11 @@ import { Clock } from "@/components/clock/clock";
 
 export class ChessGame {
   private renderer: Renderer;
-  private gameState: GameState;
+  private readonly gameState: GameState;
   private mouseController: MouseController;
   private keyBoardController: KeyboardController;
   private sidebarController: SidebarController;
-  private gameEngine: GameEngine;
+  private readonly gameEngine: GameEngine;
 
   constructor(canvas: HTMLCanvasElement) {
     this.renderer = new Renderer(canvas);

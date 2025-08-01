@@ -1,9 +1,9 @@
-import {MoveChecker, MoveValidator, MoveValidatorHelpers} from "./move-checker";
+import { MoveValidator, MoveValidatorHelpers } from "./move-checker";
 import { Move } from "@/types/types";
 import { Coordinate, Piece } from "@/types/types";
-import {Board, Game} from "@/types/game";
+import { Board, Game } from "@/types/game";
 
-export class KnightMoveChecker extends MoveChecker implements MoveValidator {
+export class KnightMoveChecker implements MoveValidator {
   getPossibleMoves(piece: Piece, pos: Coordinate, { board }: Game) {
     const moves: Array<Move | undefined> = [];
     const moveLength = 2,
@@ -34,7 +34,7 @@ export class KnightMoveChecker extends MoveChecker implements MoveValidator {
     board: Board,
   ): Move | undefined {
     if (!MoveValidatorHelpers.isValidBoardCoordinate(newPos)) {
-      return
+      return;
     }
 
     const move: Move = {
@@ -42,19 +42,19 @@ export class KnightMoveChecker extends MoveChecker implements MoveValidator {
       to: newPos,
       piece: piece,
       type: "normal",
-    }
+    };
 
-    const cellContent = board[newPos.x][newPos.y]
-    if(!cellContent) return move
-    if(cellContent.color === piece.color) return
+    const cellContent = board[newPos.x][newPos.y];
+    if (!cellContent) return move;
+    if (cellContent.color === piece.color) return;
 
     return {
-     ...move,
-     capture: {
-       piece: cellContent,
-       x: newPos.x,
-       y: newPos.y,
-     }
+      ...move,
+      capture: {
+        piece: cellContent,
+        x: newPos.x,
+        y: newPos.y,
+      },
     };
   }
 }

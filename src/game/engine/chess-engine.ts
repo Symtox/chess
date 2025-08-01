@@ -1,4 +1,4 @@
-import { moveCheckFactory } from "@/game/engine/validators/move-checker-factory";
+import {MoveCheckerFactory} from "@/game/engine/validators/move-checker-factory";
 import {
   clonePojo,
   Color,
@@ -9,12 +9,25 @@ import {
   Move,
   Piece,
 } from "@/types/types";
-import {applyMove, findCoordsForPiece, Game} from "@/types/game";
+import { applyMove, findCoordsForPiece, Game } from "@/types/game";
+import {bishopMoveChecker} from "@/game/engine/validators/bishop-move-checker";
+import {pawnMoveChecker} from "@/game/engine/validators/pawn-move-checker";
+import {rookMoveChecker} from "@/game/engine/validators/rook-move-checker";
+import {knightMoveChecker} from "@/game/engine/validators/knight-move-checker";
+import {kingMoveChecker} from "@/game/engine/validators/king-move-checker";
+import {queenMoveChecker} from "@/game/engine/validators/queen-move-checker";
 
 export class ChessEngine {
+  private moveCheckFactory = new MoveCheckerFactory({
+    bishop: bishopMoveChecker,
+    pawn: pawnMoveChecker,
+    rook: rookMoveChecker,
+    knight: knightMoveChecker,
+    king: kingMoveChecker,
+    queen: queenMoveChecker,
+  })
+
   constructor() {}
-
-
 
   getControlledSquareForColor(game: Game, color: Color) {
     return game.board.reduce((gAcc, col, x) => {
@@ -22,7 +35,7 @@ export class ChessEngine {
         if (!square || square.color !== color) return cAcc;
 
         const pos = { x: x, y: y };
-        const squares = moveCheckFactory
+        const squares = this.moveCheckFactory
           .getInstance(square.type)
           .getPossibleMoves(square, pos, game)
           .filter((move) => isNormalMove(move))
@@ -41,7 +54,8 @@ export class ChessEngine {
     moves.forEach((move) => {
       const tempGame = clonePojo(game);
 
-      if (isCastle(move) && this.isCheckForColor(tempGame, color)) { //todo
+      if (isCastle(move) && this.isCheckForColor(tempGame, color)) {
+        //todo
         checked.push(move);
         return;
       }
@@ -96,21 +110,18 @@ export class ChessEngine {
     return moves;
   }
 
-  computeAllowedMoves(
-    piece: Piece,
-    pos: Coordinate,
-    game: Game
-  ) {
-    const moves = moveCheckFactory
+  computeAllowedMoves(piece: Piece, pos: Coordinate, game: Game) {
+    const moves = this.moveCheckFactory
       .getInstance(piece.type)
       .getPossibleMoves(piece, pos, game);
 
-    const [legal, illegal] = this.separateCheckedMovesFromLegal(
+    this.moveCheckFactory.getInstance("pawn")
+
+    const [legal] = this.separateCheckedMovesFromLegal(
       moves,
       game,
       piece.color,
     );
-    console.log("lgeal", legal, "ill", illegal )
 
     return legal;
   }

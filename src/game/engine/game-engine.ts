@@ -13,7 +13,7 @@ import {
   isCastle,
   Move,
 } from "@/types/types";
-import {applyMove, getTrait, goToPreviousMove} from "@/types/game";
+import { applyMove, getTrait, goToPreviousMove } from "@/types/game";
 
 export class GameEngine {
   private gameState: GameState;
@@ -60,11 +60,7 @@ export class GameEngine {
           initialPosY: pos.y,
           piece: piece,
         },
-        this.chessEngine.computeAllowedMoves(
-          piece,
-          pos,
-          this.gameState.game
-        ),
+        this.chessEngine.computeAllowedMoves(piece, pos, this.gameState.game),
       );
     }
   }
@@ -107,10 +103,8 @@ export class GameEngine {
   }
 
   isHoveringPiecePlayablePiece(pos: Coordinate) {
-    const piece = this.gameState.game.board[pos.x][pos.y]
-    return (
-      piece && piece.color === getTrait(this.gameState.game)
-    );
+    const piece = this.gameState.game.board[pos.x][pos.y];
+    return piece && piece.color === getTrait(this.gameState.game);
   }
 
   hover(domX: number, domY: number) {
@@ -152,7 +146,9 @@ export class GameEngine {
       this.dialogAdapter.show(`Draw`, "by stalemate");
       this.audioAdapter.play("end");
     } else {
-      this.getTimerByColor(getOpponentColor(getTrait(this.gameState.game))).start();
+      this.getTimerByColor(
+        getOpponentColor(getTrait(this.gameState.game)),
+      ).start();
     }
   }
 

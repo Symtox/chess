@@ -1,35 +1,35 @@
-import {MoveChecker, MoveValidator, MoveValidatorHelpers} from "./move-checker";
+import { MoveValidator, MoveValidatorHelpers } from "./move-checker";
 import { Coordinate, Piece } from "@/types/types";
 import { Move } from "@/types/types";
-import {Board, Game} from "@/types/game";
+import { Board, Game } from "@/types/game";
 
-export class KingMoveChecker extends MoveChecker implements MoveValidator {
+export class KingMoveChecker implements MoveValidator {
   getPossibleMoves(piece: Piece, pos: Coordinate, game: Game) {
-    const moves: Move[] = []
+    const moves: Move[] = [];
 
-    moves.push(...this.getBasicMoves(piece, pos, game.board))
+    moves.push(...this.getBasicMoves(piece, pos, game.board));
 
-    const shortCastleMove = this.getShortCastleMove(piece, pos, game.board)
-    if(shortCastleMove) {
-      moves.push(shortCastleMove)
+    const shortCastleMove = this.getShortCastleMove(piece, pos, game.board);
+    if (shortCastleMove) {
+      moves.push(shortCastleMove);
     }
 
-    const longCastleMove = this.getLongCastleMove(piece, pos, game.board)
-    if(longCastleMove) {
-      moves.push(longCastleMove)
+    const longCastleMove = this.getLongCastleMove(piece, pos, game.board);
+    if (longCastleMove) {
+      moves.push(longCastleMove);
     }
 
-    return moves
+    return moves;
   }
 
   getBasicMoves(piece: Piece, pos: Coordinate, board: Board) {
     const moves: Move[] = [];
     for (let dx = -1; dx <= 1; dx++) {
       for (let dy = -1; dy <= 1; dy++) {
-        const movePos = {x: pos.x + dx, y: pos.y + dy};
-        const move = this.getPossibleMove(piece, pos, movePos, board)
-        if(move) {
-          moves.push(move)
+        const movePos = { x: pos.x + dx, y: pos.y + dy };
+        const move = this.getPossibleMove(piece, pos, movePos, board);
+        if (move) {
+          moves.push(move);
         }
       }
     }
@@ -37,9 +37,14 @@ export class KingMoveChecker extends MoveChecker implements MoveValidator {
     return moves;
   }
 
-  getPossibleMove(piece: Piece, pos: Coordinate, candidatePos: Coordinate, board: Board) {
+  getPossibleMove(
+    piece: Piece,
+    pos: Coordinate,
+    candidatePos: Coordinate,
+    board: Board,
+  ) {
     if (!MoveValidatorHelpers.isValidBoardCoordinate(candidatePos)) {
-      return
+      return;
     }
 
     const move: Move = {
@@ -49,13 +54,13 @@ export class KingMoveChecker extends MoveChecker implements MoveValidator {
       type: "normal",
     };
 
-    const cellContent = board[candidatePos.x][candidatePos.y]
-    if(!cellContent) {
-      return move
+    const cellContent = board[candidatePos.x][candidatePos.y];
+    if (!cellContent) {
+      return move;
     }
 
-    if(cellContent.color === piece.color) {
-      return
+    if (cellContent.color === piece.color) {
+      return;
     }
 
     return {
@@ -64,25 +69,28 @@ export class KingMoveChecker extends MoveChecker implements MoveValidator {
         x: candidatePos.x,
         y: candidatePos.y,
         piece: cellContent,
-      }
-    }
+      },
+    };
   }
 
-  getShortCastleMove(piece: Piece, pos: Coordinate, board: Board): Move | undefined {
-
-    const pieceInKingSlot = board[4][pos.y]
+  getShortCastleMove(
+    piece: Piece,
+    pos: Coordinate,
+    board: Board,
+  ): Move | undefined {
+    const pieceInKingSlot = board[4][pos.y];
     const pieceInLeftRookSlot = board[0][pos.y];
 
     if (
-      !board[1][pos.y]
-      && !board[2][pos.y]
-      && !board[3][pos.y]
-      && pieceInLeftRookSlot
-      && pieceInLeftRookSlot.type === "rook"
-      && !pieceInLeftRookSlot.hasMoved
-      && pieceInKingSlot
-      && pieceInKingSlot.type === "king"
-      && !pieceInKingSlot.hasMoved
+      !board[1][pos.y] &&
+      !board[2][pos.y] &&
+      !board[3][pos.y] &&
+      pieceInLeftRookSlot &&
+      pieceInLeftRookSlot.type === "rook" &&
+      !pieceInLeftRookSlot.hasMoved &&
+      pieceInKingSlot &&
+      pieceInKingSlot.type === "king" &&
+      !pieceInKingSlot.hasMoved
     ) {
       return {
         type: "long",
@@ -91,24 +99,28 @@ export class KingMoveChecker extends MoveChecker implements MoveValidator {
     }
   }
 
-  getLongCastleMove(piece: Piece, pos: Coordinate, board: Board): Move | undefined {
-    const pieceInKingSlot = board[4][pos.y]
+  getLongCastleMove(
+    piece: Piece,
+    pos: Coordinate,
+    board: Board,
+  ): Move | undefined {
+    const pieceInKingSlot = board[4][pos.y];
     const pieceInRightRookSlot = board[7][pos.y];
 
     if (
-      !board[5][pos.y]
-      && !board[6][pos.y]
-      && pieceInRightRookSlot
-      && pieceInRightRookSlot.type === "rook"
-      && !pieceInRightRookSlot.hasMoved
-      && pieceInKingSlot
-      && pieceInKingSlot.type === "king"
-      && !pieceInKingSlot.hasMoved
+      !board[5][pos.y] &&
+      !board[6][pos.y] &&
+      pieceInRightRookSlot &&
+      pieceInRightRookSlot.type === "rook" &&
+      !pieceInRightRookSlot.hasMoved &&
+      pieceInKingSlot &&
+      pieceInKingSlot.type === "king" &&
+      !pieceInKingSlot.hasMoved
     ) {
       return {
         type: "short",
         color: piece.color,
-      }
+      };
     }
   }
 }

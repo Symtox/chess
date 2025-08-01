@@ -1,14 +1,10 @@
-import { MoveChecker, MoveValidator } from "./move-checker";
+import { MoveValidator } from "./move-checker";
 import { bishopMoveChecker } from "./bishop-move-checker";
 import { rookMoveChecker } from "./rook-move-checker";
 import { Coordinate, Piece } from "@/types/types";
-import {Game} from "@/types/game";
+import { Game } from "@/types/game";
 
-export class QueenMoveChecker extends MoveChecker implements MoveValidator {
-  constructor() {
-    super();
-  }
-
+export class QueenMoveChecker implements MoveValidator {
   getPossibleMoves(piece: Piece, pos: Coordinate, game: Game) {
     return [
       ...bishopMoveChecker.getPossibleMoves(piece, pos, game),

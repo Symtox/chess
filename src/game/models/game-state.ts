@@ -1,12 +1,12 @@
-import {Castle, isCastle, Move} from "@/types/types";
-import {defaultGame, Game} from "@/types/game";
+import { Move } from "@/types/types";
+import { defaultGame, Game } from "@/types/game";
 export class GameState {
   public game: Game;
   private selection: any;
   public allowedMoves: Move[] = [];
 
   constructor() {
-    this.game = defaultGame()
+    this.game = defaultGame();
     this.selection = undefined;
   }
 
@@ -18,6 +18,4 @@ export class GameState {
     this.selection = selection;
     this.allowedMoves = allowedMoves;
   }
-
-
 }

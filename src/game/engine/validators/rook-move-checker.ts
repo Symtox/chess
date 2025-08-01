@@ -1,12 +1,11 @@
 import config from "../../models/config.json";
-import { MoveChecker, MoveValidator } from "./move-checker";
+import { MoveValidator } from "./move-checker";
 import { Coordinate, Piece } from "@/types/types";
 import { Move } from "@/types/types";
-import {Game} from "@/types/game";
-
+import { Game } from "@/types/game";
 
 //TODO refactor
-export class RookMoveChecker extends MoveChecker implements MoveValidator {
+export class RookMoveChecker implements MoveValidator {
   getPossibleMoves(piece: Piece, pos: Coordinate, { board }: Game) {
     const moves: Move[] = [];
     //TOP
@@ -21,7 +20,7 @@ export class RookMoveChecker extends MoveChecker implements MoveValidator {
         type: "normal",
       };
 
-      const cellContent = board[currMove.to.x][currMove.to.y]
+      const cellContent = board[currMove.to.x][currMove.to.y];
       if (!cellContent) {
         moves.push(currMove);
         continue;
@@ -38,7 +37,7 @@ export class RookMoveChecker extends MoveChecker implements MoveValidator {
             piece: cellContent,
             x: currMove.to.x,
             y: currMove.to.y,
-          }
+          },
         });
 
         break;
@@ -57,7 +56,7 @@ export class RookMoveChecker extends MoveChecker implements MoveValidator {
         type: "normal",
       };
 
-      const cellContent = board[currMove.to.x][currMove.to.y]
+      const cellContent = board[currMove.to.x][currMove.to.y];
       if (!cellContent) {
         moves.push(currMove);
         continue;
@@ -74,7 +73,7 @@ export class RookMoveChecker extends MoveChecker implements MoveValidator {
             piece: cellContent,
             x: currMove.to.x,
             y: currMove.to.y,
-          }
+          },
         });
 
         break;
@@ -93,7 +92,7 @@ export class RookMoveChecker extends MoveChecker implements MoveValidator {
         type: "normal",
       };
 
-      const cellContent = board[currMove.to.x][currMove.to.y]
+      const cellContent = board[currMove.to.x][currMove.to.y];
       if (!cellContent) {
         moves.push(currMove);
         continue;
@@ -110,7 +109,7 @@ export class RookMoveChecker extends MoveChecker implements MoveValidator {
             piece: cellContent,
             x: currMove.to.x,
             y: currMove.to.y,
-          }
+          },
         });
 
         break;
@@ -129,7 +128,7 @@ export class RookMoveChecker extends MoveChecker implements MoveValidator {
         type: "normal",
       };
 
-      const cellContent = board[currMove.to.x][currMove.to.y]
+      const cellContent = board[currMove.to.x][currMove.to.y];
       if (!cellContent) {
         moves.push(currMove);
         continue;
@@ -146,7 +145,7 @@ export class RookMoveChecker extends MoveChecker implements MoveValidator {
             piece: cellContent,
             x: currMove.to.x,
             y: currMove.to.y,
-          }
+          },
         });
 
         break;
